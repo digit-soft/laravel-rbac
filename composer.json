@@ -1,0 +1,40 @@
+{
+    "name": "digit-soft/laravel-rbac",
+    "version": "0.0.1",
+    "description": "Laravel RBAC implementation.",
+    "keywords": ["laravel rbac", "rbac"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Digit",
+            "email": "digit.vova@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.1",
+        "laravel/framework": "~5.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "DigitSoft\\LaravelRbac\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "DigitSoft\\LaravelRbac\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        },
+        "laravel": {
+            "providers": [
+                "DigitSoft\\LaravelRbac\\RbacServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
