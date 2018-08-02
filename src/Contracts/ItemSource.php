@@ -34,11 +34,11 @@ interface ItemSource
 
     /**
      * Remove item
-     * @param string|Permission|Role $name
-     * @param int $type
+     * @param Permission|Role $item
+     * @param int             $type
      * @return bool
      */
-    public function removeItem($name, $type = self::TYPE_PERMISSION);
+    public function removeItem($item, $type = self::TYPE_PERMISSION);
 
     /**
      * Add child to item
@@ -71,4 +71,40 @@ interface ItemSource
      * @return mixed
      */
     public function getChildren($parentName, $parentType = self::TYPE_PERMISSION, $recursive = false);
+
+    /**
+     * Get user assignments
+     * @param int      $user_id
+     * @param int|null $type
+     * @return Permission[]|Role[]
+     */
+    public function getAssignments($user_id, $type = null);
+
+    /**
+     * Add user assignment
+     * @param int $user_id
+     * @param Permission|Role $item
+     * @return $this
+     */
+    public function addAssignment($user_id, $item);
+
+    /**
+     * Remove user assignment
+     * @param int             $user_id
+     * @param Permission|Role $item
+     * @return $this
+     */
+    public function removeAssignment($user_id, $item);
+
+    /**
+     * Remove all user assignments
+     * @param int $user_id
+     * @return $this
+     */
+    public function removeAssignments($user_id);
+
+    /**
+     * Flush all data
+     */
+    public function flushAll();
 }
