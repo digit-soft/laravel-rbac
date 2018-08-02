@@ -30,6 +30,7 @@
         },
         "laravel": {
             "providers": [
+                "DigitSoft\\LaravelRbac\\RbacServiceProviderLite",
                 "DigitSoft\\LaravelRbac\\RbacServiceProvider"
             ]
         }
