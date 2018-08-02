@@ -1,0 +1,35 @@
+<?php
+
+use DigitSoft\LaravelRbac\Sources\DbSource;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class DummyClass extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('DummyTable', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('parent_id')->comment('Parent');
+            $table->integer('child_id')->comment('Child');
+            $table->foreign('parent_id')->references('id')->on(DbSource::TABLE_ITEMS)->onDelete('cascade');
+            $table->foreign('child_id')->references('id')->on(DbSource::TABLE_ITEMS)->onDelete('cascade');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('DummyTable');
+    }
+}
