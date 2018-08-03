@@ -8,5 +8,4 @@ namespace DigitSoft\LaravelRbac\Contracts;
  */
 interface Role extends Permission
 {
-
 }

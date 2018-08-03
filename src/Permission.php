@@ -45,7 +45,7 @@ class Permission implements PermissionContract
      */
     public function __construct($config = [])
     {
-        $this->configureSelf($config);
+        $this->fill($config);
     }
 
     /**
@@ -82,12 +82,21 @@ class Permission implements PermissionContract
     }
 
     /**
-     * @param array $config
+     * Get item type
+     * @return int
      */
-    protected function configureSelf($config)
+    public function type()
+    {
+        return static::TYPE_PERMISSION;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function fill($data = [])
     {
         $reflection = $this->getReflection();
-        foreach ($config as $key => $value) {
+        foreach ($data as $key => $value) {
             if (
                 property_exists($this, $key)
                 && ($prop = $reflection->getProperty($key)) !== null

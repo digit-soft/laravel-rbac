@@ -2,9 +2,6 @@
 
 namespace DigitSoft\LaravelRbac\Contracts;
 
-use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Contracts\Support\Jsonable;
-
 /**
  * Interface Permission
  * @package DigitSoft\LaravelRbac\Contracts
@@ -14,22 +11,6 @@ use Illuminate\Contracts\Support\Jsonable;
  * @property string $description
  * @property array  $children
  */
-interface Permission extends Arrayable, Jsonable
+interface Permission extends Item
 {
-    /**
-     * Get the instance as an array.
-     *
-     * @param bool $withGuarded
-     * @return array
-     */
-    public function toArray($withGuarded = false);
-
-    /**
-     * Convert the object to its JSON representation.
-     *
-     * @param  int $options
-     * @param bool $withGuarded
-     * @return string
-     */
-    public function toJson($options = 0, $withGuarded = false);
 }
