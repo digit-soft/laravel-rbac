@@ -1,6 +1,6 @@
 <?php
 
-use DigitSoft\LaravelRbac\Sources\DbSource;
+use DigitSoft\LaravelRbac\Storages\DbStorage;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -15,13 +15,14 @@ class DummyClass extends Migration
     public function up()
     {
         Schema::create('DummyTable', function (Blueprint $table) {
+            $usersTable = config('rbac.users_table', 'users');
             $table->increments('id');
             $table->integer('user_id')->comment('User');
             $table->integer('item_id')->comment('Child');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            if (Schema::hasTable(DbSource::TABLE_ITEMS)) {
-                $table->foreign('item_id')->references('id')->on(DbSource::TABLE_ITEMS)->onDelete('cascade');
-            }
+            $table->foreign('user_id')->references('id')->on($usersTable)->onDelete('cascade');
+            $table->foreign('item_id')->references('id')->on(DbStorage::TABLE_ITEMS)->onDelete('cascade');
+            $table->index(['user_id'], 'idx_DummyTable_user');
+            $table->index(['item_id'], 'idx_DummyTable_item');
         });
     }
 

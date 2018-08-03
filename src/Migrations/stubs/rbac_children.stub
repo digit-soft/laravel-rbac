@@ -1,6 +1,6 @@
 <?php
 
-use DigitSoft\LaravelRbac\Sources\DbSource;
+use DigitSoft\LaravelRbac\Storages\DbStorage;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -18,8 +18,10 @@ class DummyClass extends Migration
             $table->increments('id');
             $table->integer('parent_id')->comment('Parent');
             $table->integer('child_id')->comment('Child');
-            $table->foreign('parent_id')->references('id')->on(DbSource::TABLE_ITEMS)->onDelete('cascade');
-            $table->foreign('child_id')->references('id')->on(DbSource::TABLE_ITEMS)->onDelete('cascade');
+            $table->foreign('parent_id')->references('id')->on(DbStorage::TABLE_ITEMS)->onDelete('cascade');
+            $table->foreign('child_id')->references('id')->on(DbStorage::TABLE_ITEMS)->onDelete('cascade');
+            $table->index(['parent_id'], 'idx_DummyTable_parent');
+            $table->index(['child_id'], 'idx_DummyTable_child');
         });
     }
 
