@@ -5,6 +5,7 @@ namespace DigitSoft\LaravelRbac\Commands;
 use DigitSoft\LaravelRbac\Migrations\MigrationCreator;
 use DigitSoft\LaravelRbac\Sources\DbSource;
 use Illuminate\Console\Command;
+use Illuminate\Filesystem\Filesystem;
 
 /**
  * Class CreateItemMigrationsCommand
@@ -12,13 +13,27 @@ use Illuminate\Console\Command;
  */
 class CreateItemMigrationsCommand extends Command
 {
-    protected $name = 'rbac:migration-item';
+    protected $name = 'rbac:tables';
 
-    protected $description = 'Create migrations for items in DB';
+    protected $description = 'Create migrations for items and assignments in DB';
     /**
      * @var MigrationCreator|null
      */
     protected $migrationCreator;
+    /**
+     * @var Filesystem
+     */
+    protected $files;
+
+    /**
+     * CreateItemMigrationsCommand constructor.
+     * @param Filesystem $files
+     */
+    public function __construct(Filesystem $files)
+    {
+        parent::__construct();
+        $this->files = $files;
+    }
 
     /**
      * Handle command
@@ -26,7 +41,7 @@ class CreateItemMigrationsCommand extends Command
      */
     public function handle()
     {
-        $tables = [DbSource::TABLE_ITEMS, DbSource::TABLE_CHILDREN];
+        $tables = [DbSource::TABLE_ITEMS, DbSource::TABLE_CHILDREN, DbSource::TABLE_ASSIGNS];
         foreach ($tables as $num => $table) {
             if ($num) {
                 // keep order of migrations
@@ -45,7 +60,7 @@ class CreateItemMigrationsCommand extends Command
     protected function getMigrationCreator()
     {
         if ($this->migrationCreator === null) {
-            $this->migrationCreator = new MigrationCreator($this->laravel->make('files'));
+            $this->migrationCreator = new MigrationCreator($this->files);
         }
         return $this->migrationCreator;
     }
