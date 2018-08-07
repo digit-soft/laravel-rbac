@@ -7,7 +7,6 @@ use DigitSoft\LaravelRbac\Contracts\Storage;
 use DigitSoft\LaravelRbac\Traits\StorageHelpers;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
 
 class DbStorage implements Storage
 {
@@ -184,6 +183,9 @@ class DbStorage implements Storage
             $query->where('asg.user_id', '=', $user_id)->take(1);
         }
         $results = $query->get(['it.*', 'asg.user_id'])->groupBy('user_id');
+        if (empty($results)) {
+            return [];
+        }
         $items = [];
         $names = [];
         foreach ($results as $userId => $rows) {
@@ -196,7 +198,7 @@ class DbStorage implements Storage
                 $items[$userId] = $this->findDataConditionally(['name' => $names], $itemsAll, true);
             }
         }
-        return $user_id !== null ? reset($items) : $items;
+        return $user_id !== null && !empty($items) ? reset($items) : $items;
     }
 
     /**
