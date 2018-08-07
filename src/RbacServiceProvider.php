@@ -21,7 +21,7 @@ class RbacServiceProvider extends ServiceProvider
     protected $defer = true;
 
     /**
-     * Bootstrap the application events.
+     * Bootstrap the application events and publish config.
      *
      * @return void
      */
@@ -75,7 +75,7 @@ class RbacServiceProvider extends ServiceProvider
                     return $this->createAccessCheckerBasic($app);
                     break;
                 case Checkers\Cached::class:
-                    return $this->createAccessCheckerCahed($app);
+                    return $this->createAccessCheckerCached($app);
                     break;
                 default:
                     return new $checkerClass();
@@ -170,7 +170,7 @@ class RbacServiceProvider extends ServiceProvider
      * @param Application $app
      * @return AccessChecker
      */
-    private function createAccessCheckerCahed($app)
+    private function createAccessCheckerCached($app)
     {
         return new Checkers\Cached($app['request'], $app['rbac.storage']);
     }
