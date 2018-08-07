@@ -40,14 +40,18 @@ class DbStorage implements Storage
 
     /**
      * Get item by name
-     * @param string $name
+     * @param string   $name
+     * @param int|null $type
      * @return Item|null
      */
-    public function getItem($name)
+    public function getItem($name, $type = null)
     {
-        $result = $this->itemsQuery()
-            ->where('name', '=', $name)
-            ->first();
+        $query = $this->itemsQuery()
+            ->where('name', '=', $name);
+        if (null !== $type) {
+            $query->where('type', '=', $type);
+        }
+        $result = $query->first();
         return $result !== null ? $this->populateItem($result) : null;
     }
 

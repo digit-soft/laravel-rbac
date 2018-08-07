@@ -17,10 +17,11 @@ interface Storage
 
     /**
      * Get item by name
-     * @param string $name
+     * @param string   $name
+     * @param int|null $type
      * @return Item|null
      */
-    public function getItem($name);
+    public function getItem($name, $type = null);
 
     /**
      * Save item to storage

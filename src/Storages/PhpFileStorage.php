@@ -70,12 +70,16 @@ class PhpFileStorage implements Storage
 
     /**
      * Get item by name
-     * @param string $name
+     * @param string   $name
+     * @param int|null $type
      * @return Item|null
      */
-    public function getItem($name)
+    public function getItem($name, $type = null)
     {
         $conditions = ['name' => $name];
+        if (null !== $type) {
+            $conditions['type'] = $type;
+        }
         $items = $this->getItemsInternal($conditions);
         return !empty($items) ? reset($items) : null;
     }
