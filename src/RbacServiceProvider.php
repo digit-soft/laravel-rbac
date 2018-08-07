@@ -57,7 +57,7 @@ class RbacServiceProvider extends ServiceProvider
     protected function registerManager()
     {
         $this->app->singleton('rbac', function ($app) {
-            return new RbacManager();
+            return new RbacManager($app['rbac.storage'], $app['rbac.checker']);
         });
     }
 
