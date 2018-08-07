@@ -1,6 +1,6 @@
 {
     "name": "digit-soft/laravel-rbac",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "Laravel RBAC implementation.",
     "keywords": ["laravel rbac", "rbac"],
     "license": "MIT",
