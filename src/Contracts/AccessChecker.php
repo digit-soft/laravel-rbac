@@ -8,11 +8,11 @@ interface AccessChecker
 {
     /**
      * Check that user has permission or role by name
-     * @param string   $name
-     * @param int|null $user_id
+     * @param array|string $names
+     * @param int|null     $user_id
      * @return bool
      */
-    public function has($name, $user_id = null);
+    public function has($names, $user_id = null);
 
     /**
      * Set current request

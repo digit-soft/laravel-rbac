@@ -57,11 +57,11 @@ class Basic implements AccessChecker
 
     /**
      * Check that user has permission or role by name
-     * @param string   $name
-     * @param int|null $user_id
+     * @param array|string $names
+     * @param int|null     $user_id
      * @return bool
      */
-    public function has($name, $user_id = null)
+    public function has($names, $user_id = null)
     {
         if ($user_id === null && ($user = $this->request->user()) !== null) {
             $user_id = $user->getAuthIdentifier();
@@ -69,12 +69,17 @@ class Basic implements AccessChecker
         if ($user_id === null) {
             return false;
         }
-        if (($cacheCheck = $this->getCheckCache($user_id, $name)) !== null) {
-            return $cacheCheck;
+        $names = is_array($names) ? $names : [$names];
+        foreach ($names as $name) {
+            if (($checkResult = $this->getCheckCache($user_id, $name)) === null) {
+                $checkResult = $this->checkAssignments($name, $this->getAssignments($user_id));
+            }
+            $this->setCheckCache($user_id, $name, $checkResult);
+            if ($checkResult) {
+                return true;
+            }
         }
-        $checkResult = $this->checkAssignments($name, $this->getAssignments($user_id));
-        $this->setCheckCache($user_id, $name, $checkResult);
-        return $checkResult;
+        return false;
     }
 
     /**
