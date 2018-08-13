@@ -16,8 +16,8 @@ class PermissionCheck
     /**
      * Handle request
      * Check permissions or roles. Permissions can be passed as `|` separated array
-     * @param Request  $request
-     * @param \Closure $next
+     * @param Request      $request
+     * @param \Closure     $next
      * @param string|array $permission
      * @return mixed
      */
