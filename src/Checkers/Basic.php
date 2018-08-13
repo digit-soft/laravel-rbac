@@ -64,6 +64,7 @@ class Basic implements AccessChecker
     public function has($names, $user_id = null)
     {
         if ($user_id === null && ($user = $this->request->user()) !== null) {
+            /** @var $user \Illuminate\Foundation\Auth\User */
             $user_id = $user->getAuthIdentifier();
         }
         if ($user_id === null) {

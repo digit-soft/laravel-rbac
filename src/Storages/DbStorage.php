@@ -15,7 +15,9 @@ class DbStorage implements Storage
     const TABLE_ASSIGNS = 'rbac_assigns';
 
     use StorageHelpers;
-
+    /**
+     * @var DatabaseManager
+     */
     protected $db;
 
     /**
