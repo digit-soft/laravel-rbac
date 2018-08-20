@@ -62,6 +62,7 @@ class Permission implements PermissionContract
             }
             $data[$name] = $this->{$name};
         }
+        $data['type'] = static::type();
         return $data;
     }
 
