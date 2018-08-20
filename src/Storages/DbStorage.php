@@ -64,7 +64,8 @@ class DbStorage implements Storage
     public function saveItem($item)
     {
         $itemArray = $item->toArray();
-        if (!$item->id === null) {
+        if ($item->id === null) {
+            Arr::forget($itemArray, 'id');
             $id = $this->itemsQuery()->insertGetId($itemArray);
             $item->id = $id;
             return true;
