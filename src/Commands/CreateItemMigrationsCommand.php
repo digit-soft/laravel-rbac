@@ -2,8 +2,8 @@
 
 namespace DigitSoft\LaravelRbac\Commands;
 
+use DigitSoft\LaravelRbac\Contracts\Item;
 use DigitSoft\LaravelRbac\Migrations\MigrationCreator;
-use DigitSoft\LaravelRbac\Storages\DbStorage;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 
@@ -41,7 +41,7 @@ class CreateItemMigrationsCommand extends Command
      */
     public function handle()
     {
-        $tables = [DbStorage::TABLE_ITEMS, DbStorage::TABLE_CHILDREN, DbStorage::TABLE_ASSIGNS];
+        $tables = [Item::DB_TABLE_ITEMS, Item::DB_TABLE_CHILDREN, Item::DB_TABLE_ASSIGNS];
         foreach ($tables as $num => $table) {
             if ($num) {
                 // keep order of migrations

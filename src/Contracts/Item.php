@@ -17,13 +17,17 @@ use Illuminate\Contracts\Support\Jsonable;
  */
 interface Item extends Arrayable, Jsonable
 {
-    const TYPE_PERMISSION = 1;
-    const TYPE_ROLE = 2;
+    const TYPE_PERMISSION   = 1;
+    const TYPE_ROLE         = 2;
+
+    const DB_TABLE_ITEMS    = 'rbac_items';
+    const DB_TABLE_CHILDREN = 'rbac_children';
+    const DB_TABLE_ASSIGNS  = 'rbac_assigns';
 
     /**
      * Get the instance as an array.
      *
-     * @param bool $withGuarded
+     * @param  bool $withGuarded
      * @return array
      */
     public function toArray($withGuarded = false);
@@ -31,16 +35,16 @@ interface Item extends Arrayable, Jsonable
     /**
      * Convert the object to its JSON representation.
      *
-     * @param  int $options
-     * @param bool $withGuarded
+     * @param  int  $options
+     * @param  bool $withGuarded
      * @return string
      */
     public function toJson($options = 0, $withGuarded = false);
 
     /**
      * Fill item with data
-     * @param array $data
+     * @param  array $attributes
      * @return void
      */
-    public function fill($data = []);
+    public function fill(array $attributes);
 }

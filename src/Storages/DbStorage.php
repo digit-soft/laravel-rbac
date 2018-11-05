@@ -10,11 +10,8 @@ use Illuminate\Support\Arr;
 
 class DbStorage implements Storage
 {
-    const TABLE_ITEMS = 'rbac_items';
-    const TABLE_CHILDREN = 'rbac_children';
-    const TABLE_ASSIGNS = 'rbac_assigns';
-
     use StorageHelpers;
+
     /**
      * @var DatabaseManager
      */
@@ -89,8 +86,8 @@ class DbStorage implements Storage
 
     /**
      * Add item child
-     * @param Item $child
-     * @param Item $item
+     * @param  Item $child
+     * @param  Item $item
      * @return bool
      */
     public function addItemChild($child, $item)
@@ -112,8 +109,8 @@ class DbStorage implements Storage
 
     /**
      * Remove child from item or from all items
-     * @param Item|null $child
-     * @param Item|null $item
+     * @param  Item|null $child
+     * @param  Item|null $item
      * @return void
      */
     public function removeItemChild($child, $item = null)
@@ -128,15 +125,15 @@ class DbStorage implements Storage
 
     /**
      * Get item children
-     * @param Item|null $item
-     * @param bool      $onlyNames
+     * @param  Item|null $item
+     * @param  bool      $onlyNames
      * @return Item[]|string[]
      */
     public function getItemChildren($item = null, $onlyNames = false)
     {
         $query = $this->childrenQuery('ch');
-        $query->leftJoin(static::TABLE_ITEMS . ' AS it', 'ch.child_id', '=', 'it.id');
-        $query->leftJoin(static::TABLE_ITEMS . ' AS itp', 'ch.parent_id', '=', 'itp.id');
+        $query->leftJoin(Item::DB_TABLE_ITEMS . ' AS it', 'ch.child_id', '=', 'it.id');
+        $query->leftJoin(Item::DB_TABLE_ITEMS . ' AS itp', 'ch.parent_id', '=', 'itp.id');
         if ($item !== null) {
             $query->where('parent_id', '=', $item->id);
         }
@@ -161,7 +158,7 @@ class DbStorage implements Storage
 
     /**
      * Remove children from item
-     * @param Item $item
+     * @param  Item $item
      * @return void
      */
     public function removeItemChildren($item)
@@ -181,7 +178,7 @@ class DbStorage implements Storage
     public function getAssignments($user_id = null, $onlyNames = false)
     {
         $query = $this->assignsQuery('asg')
-            ->join(static::TABLE_ITEMS . ' AS it', 'asg.item_id', '=', 'it.id');
+            ->join(Item::DB_TABLE_ITEMS . ' AS it', 'asg.item_id', '=', 'it.id');
         if ($user_id !== null) {
             $query->where('asg.user_id', '=', $user_id)->take(1);
         }
@@ -206,8 +203,8 @@ class DbStorage implements Storage
 
     /**
      * Add user assignment
-     * @param Item     $item
-     * @param int|null $user_id
+     * @param  Item     $item
+     * @param  int|null $user_id
      * @return bool
      */
     public function addAssignment($item, $user_id)
@@ -228,8 +225,8 @@ class DbStorage implements Storage
 
     /**
      * Remove assignment (from one user or all)
-     * @param Item     $item
-     * @param int|null $user_id
+     * @param  Item     $item
+     * @param  int|null $user_id
      * @return void
      */
     public function removeAssignment($item, $user_id = null)
@@ -244,7 +241,7 @@ class DbStorage implements Storage
 
     /**
      * Remove all user assignments
-     * @param int $user_id
+     * @param  int $user_id
      * @return void
      */
     public function removeAssignments($user_id)
@@ -256,8 +253,8 @@ class DbStorage implements Storage
 
     /**
      * Get items internal helper
-     * @param array|null $names
-     * @param string|null $type
+     * @param  array|null $names
+     * @param  string|null $type
      * @return array
      */
     protected function getItemsInternal($names = null, $type = null)
@@ -281,39 +278,39 @@ class DbStorage implements Storage
 
     /**
      * Get query builder for items table
-     * @param string|null $alias
+     * @param  string|null $alias
      * @return \Illuminate\Database\Query\Builder
      */
     protected function itemsQuery($alias = null)
     {
-        $table = self::TABLE_ITEMS . ($alias !== null ? ' AS ' . $alias : '');
+        $table = Item::DB_TABLE_ITEMS . ($alias !== null ? ' AS ' . $alias : '');
         return $this->newQuery($table);
     }
 
     /**
      * Get query builder for assigns table
-     * @param string|null $alias
+     * @param  string|null $alias
      * @return \Illuminate\Database\Query\Builder
      */
     protected function assignsQuery($alias = null)
     {
-        $table = self::TABLE_ASSIGNS . ($alias !== null ? ' AS ' . $alias : '');
+        $table = Item::DB_TABLE_ASSIGNS . ($alias !== null ? ' AS ' . $alias : '');
         return $this->newQuery($table);
     }
 
     /**
      * Get query builder for children table
-     * @param string|null $alias
+     * @param  string|null $alias
      * @return \Illuminate\Database\Query\Builder
      */
     protected function childrenQuery($alias = null)
     {
-        $table = self::TABLE_CHILDREN . ($alias !== null ? ' AS ' . $alias : '');
+        $table = Item::DB_TABLE_CHILDREN . ($alias !== null ? ' AS ' . $alias : '');
         return $this->newQuery($table);
     }
 
     /**
-     * @param $table
+     * @param  string $table
      * @return \Illuminate\Database\Query\Builder
      */
     protected function newQuery($table)

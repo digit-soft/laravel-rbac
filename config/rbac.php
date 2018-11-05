@@ -8,6 +8,7 @@ return [
     'item_file' => 'rbac/items.php',
     'assigns_file' => 'rbac/assigns.php',
     'users_table' => 'users',
+    'user_model' => 'App\\Models\\User',
     'cache_enable' => false,
     'cache_duration' => 1 //in minutes
 ];

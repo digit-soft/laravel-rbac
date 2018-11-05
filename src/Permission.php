@@ -94,10 +94,10 @@ class Permission implements PermissionContract
     /**
      * @inheritdoc
      */
-    public function fill($data = [])
+    public function fill(array $attributes)
     {
         $reflection = $this->getReflection();
-        foreach ($data as $key => $value) {
+        foreach ($attributes as $key => $value) {
             if (
                 property_exists($this, $key)
                 && ($prop = $reflection->getProperty($key)) !== null
