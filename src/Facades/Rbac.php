@@ -2,6 +2,7 @@
 
 namespace DigitSoft\LaravelRbac\Facades;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -21,6 +22,8 @@ use Illuminate\Support\Facades\Facade;
  * @method static bool assign(\DigitSoft\LaravelRbac\Contracts\Item $item, int $user_id)
  * @method static void revoke(\DigitSoft\LaravelRbac\Contracts\Item $item, int $user_id)
  * @method static void revokeAll(int $user_id)
+ * @method static \DigitSoft\LaravelRbac\Models\Role[]|Collection getUserRoles(int $user_id)
+ * @method static \DigitSoft\LaravelRbac\Models\Permission[]|Collection getUserPermissions(int $user_id)
  * @see \DigitSoft\LaravelRbac\RbacManager
  */
 class Rbac extends Facade

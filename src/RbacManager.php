@@ -5,6 +5,8 @@ namespace DigitSoft\LaravelRbac;
 use DigitSoft\LaravelRbac\Contracts\AccessChecker;
 use DigitSoft\LaravelRbac\Contracts\Item;
 use DigitSoft\LaravelRbac\Contracts\Storage;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
 
 /**
  * Class RbacManager.
@@ -177,5 +179,57 @@ class RbacManager
     public function setStorage(Storage $storage)
     {
         $this->storage = $storage;
+    }
+
+    /**
+     * Get all user assigned roles
+     * @param  int $user_id
+     * @return Models\Role[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getUserRoles(int $user_id)
+    {
+        return $this->getUserPermissionsInternal($user_id, Item::TYPE_ROLE);
+    }
+
+    /**
+     * Get all user assigned permissions
+     * @param  int $user_id
+     * @return Models\Permission[]|Models\Role[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getUserPermissions(int $user_id)
+    {
+        return $this->getUserPermissionsInternal($user_id, Item::TYPE_PERMISSION);
+    }
+
+    /**
+     * Get all user assigned items
+     * @param  int     $user_id
+     * @param  int|null $type
+     * @return Models\Permission[]|Models\Role[]|\Illuminate\Database\Eloquent\Collection
+     */
+    protected function getUserPermissionsInternal($user_id, $type = null)
+    {
+        $query = Models\Permission::query()
+            ->withoutGlobalScope('type')
+            ->whereHas('assignments', function ($queryInt) use ($user_id) {
+            /** @var $queryInt Builder */
+            $queryInt->where('user_id', '=', $user_id);
+        });
+        $query->with('children.children.children');
+        $models = $query->get();
+        if (empty($models)) {
+            return collect([]);
+        }
+        $models = Models\Permission::unpackItems($models);
+        if ($type === null) {
+            return collect($models);
+        }
+        $results = [];
+        foreach ($models as $model) {
+            if ($model->type === $type) {
+                $results[] = $model;
+            }
+        }
+        return collect($results);
     }
 }
