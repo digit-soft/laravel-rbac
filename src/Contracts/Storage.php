@@ -25,45 +25,45 @@ interface Storage
 
     /**
      * Save item to storage
-     * @param Item $item
+     * @param  Item $item
      * @return bool
      */
     public function saveItem($item);
 
     /**
      * Remove item from storage
-     * @param Item $item
+     * @param  Item $item
      * @return void
      */
     public function removeItem($item);
 
     /**
      * Add item child
-     * @param Item $child
-     * @param Item $item
+     * @param  Item $child
+     * @param  Item $item
      * @return bool
      */
     public function addItemChild($child, $item);
 
     /**
      * Remove child from item or from all items
-     * @param Item|null $child
-     * @param Item|null $item
+     * @param  Item|null $child
+     * @param  Item|null $item
      * @return void
      */
     public function removeItemChild($child, $item = null);
 
     /**
      * Get item children
-     * @param Item|null $item
-     * @param bool      $onlyNames
+     * @param  Item|null $item
+     * @param  bool      $onlyNames
      * @return Item[]|string[]
      */
     public function getItemChildren($item = null, $onlyNames = false);
 
     /**
      * Remove children from item
-     * @param Item $item
+     * @param  Item $item
      * @return void
      */
     public function removeItemChildren($item);
@@ -80,7 +80,7 @@ interface Storage
 
     /**
      * Add user assignment
-     * @param Item $item
+     * @param Item     $item
      * @param int|null $user_id
      * @return bool
      */
@@ -88,7 +88,7 @@ interface Storage
 
     /**
      * Remove assignment (from one user or all)
-     * @param Item $item
+     * @param Item     $item
      * @param int|null $user_id
      * @return void
      */

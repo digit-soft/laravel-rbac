@@ -2,7 +2,7 @@
 
 namespace DigitSoft\LaravelRbac\Storages;
 
-use DigitSoft\LaravelRbac\Contracts\Item;
+use DigitSoft\LaravelRbac\Contracts\ItemSimple;
 use DigitSoft\LaravelRbac\Contracts\Storage;
 use DigitSoft\LaravelRbac\Misc\VarDumper;
 use DigitSoft\LaravelRbac\Traits\StorageHelpers;
@@ -59,8 +59,8 @@ class PhpFileStorage implements Storage
 
     /**
      * Get all items
-     * @param int|null $type
-     * @return Item[]
+     * @param  int|null $type
+     * @return ItemSimple[]
      */
     public function getItems($type = null)
     {
@@ -70,9 +70,9 @@ class PhpFileStorage implements Storage
 
     /**
      * Get item by name
-     * @param string   $name
-     * @param int|null $type
-     * @return Item|null
+     * @param  string   $name
+     * @param  int|null $type
+     * @return ItemSimple|null
      */
     public function getItem($name, $type = null)
     {
@@ -86,7 +86,7 @@ class PhpFileStorage implements Storage
 
     /**
      * Save item to storage
-     * @param Item $item
+     * @param  ItemSimple $item
      * @return bool
      */
     public function saveItem($item)
@@ -104,7 +104,7 @@ class PhpFileStorage implements Storage
 
     /**
      * Remove item from storage
-     * @param Item $item
+     * @param  ItemSimple $item
      * @return void
      */
     public function removeItem($item)
@@ -126,8 +126,8 @@ class PhpFileStorage implements Storage
 
     /**
      * Add item child
-     * @param Item $child
-     * @param Item $item
+     * @param  ItemSimple $child
+     * @param  ItemSimple $item
      * @return bool
      */
     public function addItemChild($child, $item)
@@ -147,8 +147,8 @@ class PhpFileStorage implements Storage
 
     /**
      * Remove child from item or from all items
-     * @param Item|null $child
-     * @param Item|null $item
+     * @param  ItemSimple|null $child
+     * @param  ItemSimple|null $item
      * @return void
      */
     public function removeItemChild($child, $item = null)
@@ -182,9 +182,9 @@ class PhpFileStorage implements Storage
 
     /**
      * Get item children
-     * @param Item|null $item
-     * @param bool      $onlyNames
-     * @return Item[]|string[]
+     * @param  ItemSimple|null $item
+     * @param  bool            $onlyNames
+     * @return ItemSimple[]|string[]
      */
     public function getItemChildren($item = null, $onlyNames = false)
     {
@@ -214,7 +214,7 @@ class PhpFileStorage implements Storage
 
     /**
      * Remove children from item
-     * @param Item $item
+     * @param  ItemSimple $item
      * @return void
      */
     public function removeItemChildren($item)
@@ -264,8 +264,8 @@ class PhpFileStorage implements Storage
 
     /**
      * Add user assignment
-     * @param Item     $item
-     * @param int|null $user_id
+     * @param  ItemSimple $item
+     * @param  int|null   $user_id
      * @return bool
      */
     public function addAssignment($item, $user_id)
@@ -286,8 +286,8 @@ class PhpFileStorage implements Storage
 
     /**
      * Remove assignment (from one user or all)
-     * @param Item $item
-     * @param int|null $user_id
+     * @param  ItemSimple $item
+     * @param  int|null   $user_id
      * @return void
      */
     public function removeAssignment($item, $user_id = null)
@@ -312,7 +312,7 @@ class PhpFileStorage implements Storage
 
     /**
      * Remove all user assignments
-     * @param int $user_id
+     * @param  int $user_id
      * @return void
      */
     public function removeAssignments($user_id)

@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read Permission|Role $item
  * @mixin \Eloquent
  */
-class Assignment extends Model
+class Assignment extends Model implements ItemContract
 {
     public $timestamps = false;
 

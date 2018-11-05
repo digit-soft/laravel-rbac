@@ -11,6 +11,6 @@ namespace DigitSoft\LaravelRbac\Contracts;
  * @property string $description
  * @property array  $children
  */
-interface Permission extends Item
+interface Permission extends ItemSimple
 {
 }

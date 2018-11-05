@@ -2,7 +2,7 @@
 
 namespace DigitSoft\LaravelRbac\Traits;
 
-use DigitSoft\LaravelRbac\Contracts\Item;
+use DigitSoft\LaravelRbac\Contracts\ItemSimple;
 use DigitSoft\LaravelRbac\Contracts\Permission;
 use DigitSoft\LaravelRbac\Contracts\Role;
 use Illuminate\Support\Str;
@@ -68,7 +68,7 @@ trait StorageHelpers
             'name' => $name,
             'title' => $itemArray['title'] ?? Str::ucfirst(str_replace('.', ' ', $name)),
             'description' => $itemArray['description'] ?? null,
-            'type' => $itemArray['type'] ?? Item::TYPE_PERMISSION,
+            'type' => $itemArray['type'] ?? ItemSimple::TYPE_PERMISSION,
             'children' => $itemArray['children'] ?? [],
         ];
         if ($id !== null) {
@@ -82,12 +82,12 @@ trait StorageHelpers
     /**
      * Create Item from data array
      * @param array|object $data
-     * @return Item
+     * @return ItemSimple
      */
     protected function populateItem($data = [])
     {
         $data = (array)$data;
-        $itemClass = isset($data['type']) && $data['type'] === Item::TYPE_ROLE ? Role::class : Permission::class;
+        $itemClass = isset($data['type']) && $data['type'] === ItemSimple::TYPE_ROLE ? Role::class : Permission::class;
         return app()->make($itemClass, ['config' => $data]);
     }
 }

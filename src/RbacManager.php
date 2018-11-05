@@ -6,7 +6,6 @@ use DigitSoft\LaravelRbac\Contracts\AccessChecker;
 use DigitSoft\LaravelRbac\Contracts\Item;
 use DigitSoft\LaravelRbac\Contracts\Storage;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Arr;
 
 /**
  * Class RbacManager.
@@ -81,7 +80,7 @@ class RbacManager
     /**
      * Get item by name
      * @param string $name
-     * @return Contracts\Item|null
+     * @return Contracts\ItemSimple|null
      */
     public function get(string $name)
     {

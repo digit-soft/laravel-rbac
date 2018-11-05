@@ -3,7 +3,7 @@
 namespace DigitSoft\LaravelRbac\Checkers;
 
 use DigitSoft\LaravelRbac\Contracts\AccessChecker;
-use DigitSoft\LaravelRbac\Contracts\Item;
+use DigitSoft\LaravelRbac\Contracts\ItemSimple;
 use DigitSoft\LaravelRbac\Contracts\Storage;
 use DigitSoft\LaravelRbac\Traits\WorksWithExpandedItems;
 use Illuminate\Http\Request;
@@ -28,11 +28,11 @@ class Basic implements AccessChecker
     protected $checks = [];
 
     /**
-     * @var Item[]|null
+     * @var ItemSimple[]|null
      */
     protected $items;
     /**
-     * @var Item[][]|null
+     * @var ItemSimple[][]|null
      */
     protected $itemsByType;
     /**
@@ -134,7 +134,7 @@ class Basic implements AccessChecker
     /**
      * Get all items (or restrict by type)
      * @param int|null $type
-     * @return \DigitSoft\LaravelRbac\Contracts\Item[]
+     * @return \DigitSoft\LaravelRbac\Contracts\ItemSimple[]
      */
     protected function getItems($type = null)
     {
