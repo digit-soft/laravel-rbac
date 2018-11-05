@@ -214,7 +214,7 @@ class RbacManager
             /** @var $queryInt Builder */
             $queryInt->where('user_id', '=', $user_id);
         });
-        $query->with('children.children.children');
+        $query->with('children.children.children')->orderBy('name');
         $models = $query->get();
         if (empty($models)) {
             return collect([]);

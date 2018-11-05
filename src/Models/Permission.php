@@ -26,7 +26,7 @@ class Permission extends Model implements ItemContract
 
     protected $fillable = ['name', 'type', 'title', 'description'];
 
-    protected $guarded = ['children'];
+    protected $hidden = ['children'];
 
     /**
      * @inheritdoc
