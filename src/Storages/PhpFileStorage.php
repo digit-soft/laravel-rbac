@@ -234,9 +234,10 @@ class PhpFileStorage implements Storage
      * From one user as indexed array or from all users as array keyed by user id.
      * @param int|null $user_id
      * @param bool     $onlyNames
+     * @param int|null $type
      * @return array
      */
-    public function getAssignments($user_id = null, $onlyNames = false)
+    public function getAssignments($user_id = null, $onlyNames = false, $type = null)
     {
         if ($this->assignments === null) {
             $this->loadAssignments();

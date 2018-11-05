@@ -173,14 +173,18 @@ class DbStorage implements Storage
      * From one user as indexed array or from all users as array keyed by user id.
      * @param int|null $user_id
      * @param bool     $onlyNames
+     * @param int|null $type
      * @return array
      */
-    public function getAssignments($user_id = null, $onlyNames = false)
+    public function getAssignments($user_id = null, $onlyNames = false, $type = null)
     {
         $query = $this->assignsQuery('asg')
             ->join(Item::DB_TABLE_ITEMS . ' AS it', 'asg.item_id', '=', 'it.id');
         if ($user_id !== null) {
-            $query->where('asg.user_id', '=', $user_id)->take(1);
+            $query->where('asg.user_id', '=', $user_id);
+        }
+        if ($type !== null) {
+            $query->where('it.type', '=', $type);
         }
         $results = $query->get(['it.*', 'asg.user_id'])->groupBy('user_id');
         if (empty($results)) {
