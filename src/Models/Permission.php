@@ -19,6 +19,7 @@ use Illuminate\Support\Str;
  * @property-read Permission[]        $children Children array
  * @property-read Assignment[]        $assignments Assignments array
  * @package DigitSoft\LaravelRbac\Models
+ * @mixin \Eloquent
  */
 class Permission extends Model implements ItemContract
 {
@@ -27,6 +28,8 @@ class Permission extends Model implements ItemContract
     protected $fillable = ['name', 'type', 'title', 'description'];
 
     protected $hidden = ['children'];
+
+    public $timestamps = false;
 
     /**
      * @inheritdoc
