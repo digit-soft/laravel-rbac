@@ -4,20 +4,21 @@ namespace DigitSoft\LaravelRbac\Models;
 
 use DigitSoft\LaravelRbac\Contracts\Item as ItemContract;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 /**
  * Class Permission
- * @property int                      $id ID
- * @property int                      $type Item type
- * @property string                   $name Name
- * @property string                   $title Title
- * @property string                   $description Description
- * @property-read Permission[]|Role[] $parents Parents array
- * @property-read Permission[]        $children Children array
- * @property-read Assignment[]        $assignments Assignments array
+ * @property int                                 $id ID
+ * @property int                                 $type Item type
+ * @property string                              $name Name
+ * @property string                              $title Title
+ * @property string                              $description Description
+ * @property-read Permission[]|Role[]|Collection $parents Parents array
+ * @property-read Permission[]|Collection        $children Children array
+ * @property-read Assignment[]|Collection        $assignments Assignments array
  * @package DigitSoft\LaravelRbac\Models
  * @method static \Illuminate\Database\Eloquent\Builder whereName($value)
  * @mixin \Eloquent
