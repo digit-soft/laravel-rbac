@@ -88,7 +88,7 @@ trait WorksWithExpandedItems
      */
     private function buildRecursiveParents($name, &$parents)
     {
-        if ($name === '*') {
+        if ($name === '*' || !isset($parents[$name])) {
             return [];
         }
 

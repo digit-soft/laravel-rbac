@@ -211,15 +211,16 @@ class RbacManager
         $query = Models\Permission::query()
             ->withoutGlobalScope('type')
             ->whereHas('assignments', function ($queryInt) use ($user_id) {
-            /** @var $queryInt Builder */
-            $queryInt->where('user_id', '=', $user_id);
-        });
+                /** @var $queryInt Builder */
+                $queryInt->where('user_id', '=', $user_id);
+            });
         $query->with('children.children.children')->orderBy('name');
+        /** @var Models\Permission[]|Models\Role[]|\Illuminate\Database\Eloquent\Collection $models */
         $models = $query->get();
         if (empty($models)) {
             return collect([]);
         }
-        $models = Models\Permission::unpackItems($models);
+        $models = Models\Permission::unpackItems($models, 'children');
         if ($type === null) {
             return collect($models);
         }

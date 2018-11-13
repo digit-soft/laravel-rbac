@@ -19,6 +19,7 @@ use Illuminate\Support\Str;
  * @property-read Permission[]        $children Children array
  * @property-read Assignment[]        $assignments Assignments array
  * @package DigitSoft\LaravelRbac\Models
+ * @method static \Illuminate\Database\Eloquent\Builder whereName($value)
  * @mixin \Eloquent
  */
 class Permission extends Model implements ItemContract
