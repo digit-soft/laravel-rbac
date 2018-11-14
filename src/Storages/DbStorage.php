@@ -2,10 +2,14 @@
 
 namespace DigitSoft\LaravelRbac\Storages;
 
+use App\Models\Collection;
 use DigitSoft\LaravelRbac\Contracts\Item;
 use DigitSoft\LaravelRbac\Contracts\Storage;
+use DigitSoft\LaravelRbac\Models\Assignment;
+use DigitSoft\LaravelRbac\Models\Permission;
 use DigitSoft\LaravelRbac\Traits\StorageHelpers;
 use Illuminate\Database\DatabaseManager;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 
 class DbStorage implements Storage
@@ -44,13 +48,12 @@ class DbStorage implements Storage
      */
     public function getItem($name, $type = null)
     {
-        $query = $this->itemsQuery()
+        $query = Permission::query()->withoutGlobalScope('type')
             ->where('name', '=', $name);
         if (null !== $type) {
             $query->where('type', '=', $type);
         }
-        $result = $query->first();
-        return $result !== null ? $this->populateItem($result) : null;
+        return $query->first();
     }
 
     /**
@@ -60,15 +63,7 @@ class DbStorage implements Storage
      */
     public function saveItem($item)
     {
-        $itemArray = $item->toArray();
-        if ($item->id === null) {
-            Arr::forget($itemArray, 'id');
-            $id = $this->itemsQuery()->insertGetId($itemArray);
-            $item->id = $id;
-            return true;
-        }
-        unset($itemArray['id']);
-        return $this->itemsQuery()->update($itemArray) > 0;
+        return $item->save();
     }
 
     /**
@@ -81,7 +76,7 @@ class DbStorage implements Storage
         if ($item->id === null) {
             return;
         }
-        $this->itemsQuery()->delete($item->id);
+        $item->delete();
     }
 
     /**
@@ -92,19 +87,11 @@ class DbStorage implements Storage
      */
     public function addItemChild($child, $item)
     {
-        $exists = $this->childrenQuery()
-            ->where('parent_id', '=', $item->id)
-            ->where('child_id', '=', $child->id)
-            ->exists();
-        if ($exists) {
+        if (!$item->canBeAttached($child)) {
             return false;
         }
-        $record = [
-            'parent_id' => $item->id,
-            'child_id' => $child->id,
-        ];
-        return $this->childrenQuery()
-            ->insert($record);
+        $item->children()->attach($child);
+        return true;
     }
 
     /**
@@ -115,12 +102,11 @@ class DbStorage implements Storage
      */
     public function removeItemChild($child, $item = null)
     {
-        $query = $this->childrenQuery();
-        if ($item !== null) {
-            $query->where('parent_id', '=', $item->id);
+        if ($item === null) {
+            $child->parents()->detach();
+        } else {
+            $item->children()->detach($child);
         }
-        $query->where('child_id', '=', $child->id);
-        $query->delete();
     }
 
     /**
@@ -131,29 +117,22 @@ class DbStorage implements Storage
      */
     public function getItemChildren($item = null, $onlyNames = false)
     {
-        $query = $this->childrenQuery('ch');
-        $query->leftJoin(Item::DB_TABLE_ITEMS . ' AS it', 'ch.child_id', '=', 'it.id');
-        $query->leftJoin(Item::DB_TABLE_ITEMS . ' AS itp', 'ch.parent_id', '=', 'itp.id');
         if ($item !== null) {
-            $query->where('parent_id', '=', $item->id);
+            $children = $item->children()->get();
+            return $onlyNames ? Arr::pluck($children, 'name') : $children;
         }
-        $results = $query->get(['it.*', 'itp.name as parent_name'])
-            ->groupBy('parent_name')
-            ->toArray();
-        $items = [];
-        if ($onlyNames) {
-            foreach ($results as $parent_name => $rows) {
-                $items[$parent_name] = Arr::pluck($rows, 'name');
-            }
-        } else {
-            foreach ($results as $parent_name => $rows) {
-                foreach ($rows as $row) {
-                    $child = $this->populateItem($row);
-                    $items[$parent_name][$child->name] = $child;
-                }
-            }
+        /** @var Collection|Permission[] $items */
+        $items = Permission::withoutGlobalScope('type')
+            ->with('children')
+            ->orderBy('name')
+            ->get();
+        $children = [];
+        foreach ($items as $row) {
+            $children[$row->name] = $onlyNames
+                ? $row->children->pluck('name')->all()
+                : $row->children->pluck(null, 'name');
         }
-        return $item !== null ? reset($items) : $items;
+        return $children;
     }
 
     /**
@@ -163,46 +142,30 @@ class DbStorage implements Storage
      */
     public function removeItemChildren($item)
     {
-        $this->childrenQuery()
-            ->where('parent_id', '=', $item->id)
-            ->delete();
+        $item->children()->delete();
     }
 
     /**
      * Get user assignments.
      * From one user as indexed array or from all users as array keyed by user id.
-     * @param int|null $user_id
+     * @param int $user_id
      * @param bool     $onlyNames
      * @param int|null $type
      * @return array
      */
-    public function getAssignments($user_id = null, $onlyNames = false, $type = null)
+    public function getAssignments($user_id, $onlyNames = false, $type = null)
     {
-        $query = $this->assignsQuery('asg')
-            ->join(Item::DB_TABLE_ITEMS . ' AS it', 'asg.item_id', '=', 'it.id');
-        if ($user_id !== null) {
-            $query->where('asg.user_id', '=', $user_id);
-        }
+        $query = Permission::query()->withoutGlobalScope('type');
+        $query->whereHas('assignments', function ($queryInt) use ($user_id) {
+            /** @var Builder $queryInt */
+            $queryInt->where('user_id', '=', $user_id);
+        });
         if ($type !== null) {
-            $query->where('it.type', '=', $type);
+            $query->where('type', '=', $type);
         }
-        $results = $query->get(['it.*', 'asg.user_id'])->groupBy('user_id');
-        if (empty($results)) {
-            return [];
-        }
-        $items = [];
-        $names = [];
-        foreach ($results as $userId => $rows) {
-            $items[$userId] = Arr::pluck($rows, 'name');
-            $names = array_merge($names, $items[$userId]);
-        }
-        if (!$onlyNames) {
-            $itemsAll = $this->getItemsInternal($names);
-            foreach ($items as $userId => $names) {
-                $items[$userId] = $this->findDataConditionally(['name' => $names], $itemsAll, true);
-            }
-        }
-        return $user_id !== null && !empty($items) ? reset($items) : $items;
+        $items = $query->get();
+
+        return $onlyNames ? $items->pluck('name')->toArray() : $items;
     }
 
     /**
@@ -213,18 +176,12 @@ class DbStorage implements Storage
      */
     public function addAssignment($item, $user_id)
     {
-        $exist = $this->assignsQuery()
-            ->where('user_id', '=', $user_id)
-            ->where('item_id', '=', $item->id)
-            ->exists();
+        $exist = $item->assignments()->where('user_id', '=', $user_id)->exists();
         if ($exist) {
             return false;
         }
-        $record = [
-            'user_id' => $user_id,
-            'item_id' => $item->id,
-        ];
-        return $this->assignsQuery()->insert($record);
+        $model = $item->assignments()->create(['user_id' => $user_id]);
+        return $model instanceof Assignment;
     }
 
     /**
@@ -235,12 +192,11 @@ class DbStorage implements Storage
      */
     public function removeAssignment($item, $user_id = null)
     {
-        $query = $this->assignsQuery();
+        $query = $item->assignments();
         if ($user_id !== null) {
             $query->where('user_id', '=', $user_id);
         }
-        $query->where('item_id', '=', $item->id)
-            ->delete();
+        $query->delete();
     }
 
     /**
@@ -250,7 +206,7 @@ class DbStorage implements Storage
      */
     public function removeAssignments($user_id)
     {
-        $this->assignsQuery()
+        Assignment::query()
             ->where('user_id', '=', $user_id)
             ->delete();
     }
@@ -263,62 +219,16 @@ class DbStorage implements Storage
      */
     protected function getItemsInternal($names = null, $type = null)
     {
-        $query = $this->itemsQuery();
+        $query = Permission::query()->withoutGlobalScope('type');
         if ($names !== null) {
+            $names = is_array($names) ? $names : [$names];
             $query->whereIn('name', $names);
         }
         if ($type !== null) {
             $query->where('type', '=', $type);
         }
-        $result = $query->orderBy('name')
-            ->get()->toArray();
-        $items = [];
-        foreach ($result as $row) {
-            $item = $this->populateItem($row);
-            $items[$item->name] = $item;
-        }
+        $items = $query->orderBy('name')
+            ->get()->pluck(null, 'name')->toArray();
         return $items;
-    }
-
-    /**
-     * Get query builder for items table
-     * @param  string|null $alias
-     * @return \Illuminate\Database\Query\Builder
-     */
-    protected function itemsQuery($alias = null)
-    {
-        $table = Item::DB_TABLE_ITEMS . ($alias !== null ? ' AS ' . $alias : '');
-        return $this->newQuery($table);
-    }
-
-    /**
-     * Get query builder for assigns table
-     * @param  string|null $alias
-     * @return \Illuminate\Database\Query\Builder
-     */
-    protected function assignsQuery($alias = null)
-    {
-        $table = Item::DB_TABLE_ASSIGNS . ($alias !== null ? ' AS ' . $alias : '');
-        return $this->newQuery($table);
-    }
-
-    /**
-     * Get query builder for children table
-     * @param  string|null $alias
-     * @return \Illuminate\Database\Query\Builder
-     */
-    protected function childrenQuery($alias = null)
-    {
-        $table = Item::DB_TABLE_CHILDREN . ($alias !== null ? ' AS ' . $alias : '');
-        return $this->newQuery($table);
-    }
-
-    /**
-     * @param  string $table
-     * @return \Illuminate\Database\Query\Builder
-     */
-    protected function newQuery($table)
-    {
-        return $this->db->table($table);
     }
 }

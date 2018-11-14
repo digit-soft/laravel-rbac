@@ -11,6 +11,7 @@ use Illuminate\Filesystem\Filesystem;
 /**
  * Class PhpFileStorage
  * @package DigitSoft\LaravelRbac\Storages
+ * @deprecated This is old component, do not use it anymore. It is not compatible with latest package versions.
  */
 class PhpFileStorage implements Storage
 {

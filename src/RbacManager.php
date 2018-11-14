@@ -48,8 +48,8 @@ class RbacManager
 
     /**
      * Check that user does not have any of those permissions
-     * @param string|array $permissions
-     * @param int|null     $user_id
+     * @param  string|array $permissions
+     * @param  int|null     $user_id
      * @return bool
      */
     public function hasNo($permissions, $user_id = null)
@@ -60,7 +60,7 @@ class RbacManager
     /**
      * Get permission by name
      * @param string $name
-     * @return Contracts\Permission|null
+     * @return Models\Permission|Item|null
      */
     public function getPermission(string $name)
     {
@@ -70,7 +70,7 @@ class RbacManager
     /**
      * Get role by name
      * @param string $name
-     * @return Contracts\Role|null
+     * @return Models\Role|Item|null
      */
     public function getRole(string $name)
     {
@@ -80,7 +80,7 @@ class RbacManager
     /**
      * Get item by name
      * @param string $name
-     * @return Contracts\ItemSimple|null
+     * @return Models\Permission|Models\Role|null
      */
     public function get(string $name)
     {
