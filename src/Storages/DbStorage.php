@@ -7,15 +7,12 @@ use DigitSoft\LaravelRbac\Contracts\Item;
 use DigitSoft\LaravelRbac\Contracts\Storage;
 use DigitSoft\LaravelRbac\Models\Assignment;
 use DigitSoft\LaravelRbac\Models\Permission;
-use DigitSoft\LaravelRbac\Traits\StorageHelpers;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 
 class DbStorage implements Storage
 {
-    use StorageHelpers;
-
     /**
      * @var DatabaseManager
      */

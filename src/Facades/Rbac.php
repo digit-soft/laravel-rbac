@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\Facade;
  * @package DigitSoft\LaravelRbac\Facades
  * @method static bool has(string $permissions, $user_id = null)
  * @method static bool hasNo(string $permissions, $user_id = null)
- * @method static \DigitSoft\LaravelRbac\Contracts\Permission|null getPermission(string $name)
- * @method static \DigitSoft\LaravelRbac\Contracts\Role|null getRole(string $name)
- * @method static \DigitSoft\LaravelRbac\Contracts\Role|\DigitSoft\LaravelRbac\Contracts\Permission|null get(string $name)
+ * @method static \DigitSoft\LaravelRbac\Models\Permission|null getPermission(string $name)
+ * @method static \DigitSoft\LaravelRbac\Models\Role|null getRole(string $name)
+ * @method static \DigitSoft\LaravelRbac\Models\Role|\DigitSoft\LaravelRbac\Models\Permission|null get(string $name)
  * @method static bool save(\DigitSoft\LaravelRbac\Contracts\Item $item)
  * @method static void delete(\DigitSoft\LaravelRbac\Contracts\Item $item)
  * @method static bool attach(\DigitSoft\LaravelRbac\Contracts\Item $item, \DigitSoft\LaravelRbac\Contracts\Item $child)

@@ -89,7 +89,7 @@ class RbacManager
 
     /**
      * Save item to storage
-     * @param Contracts\Permission|Contracts\Role $item
+     * @param Models\Permission|Models\Role $item
      * @return bool
      */
     public function save($item)
@@ -99,7 +99,7 @@ class RbacManager
 
     /**
      * Delete item from storage
-     * @param Contracts\Permission|Contracts\Role|string $item
+     * @param Models\Permission|Models\Role|string $item
      */
     public function delete($item)
     {
@@ -113,8 +113,8 @@ class RbacManager
 
     /**
      * Add child to item
-     * @param Contracts\Permission|Contracts\Role $item
-     * @param Contracts\Permission|Contracts\Role $child
+     * @param Models\Permission|Models\Role $item
+     * @param Models\Permission|Models\Role $child
      * @return bool
      */
     public function attach($item, $child)
@@ -124,8 +124,8 @@ class RbacManager
 
     /**
      * Remove child from item
-     * @param Contracts\Permission|Contracts\Role $item
-     * @param Contracts\Permission|Contracts\Role $child
+     * @param Models\Permission|Models\Role $item
+     * @param Models\Permission|Models\Role $child
      */
     public function detach($item, $child)
     {
@@ -134,7 +134,7 @@ class RbacManager
 
     /**
      * Remove all children from item
-     * @param Contracts\Permission|Contracts\Role $item
+     * @param Models\Permission|Models\Role $item
      */
     public function detachAll($item)
     {
@@ -143,7 +143,7 @@ class RbacManager
 
     /**
      * Add assignment to user
-     * @param Contracts\Permission|Contracts\Role $item
+     * @param Models\Permission|Models\Role $item
      * @param int $user_id
      * @return bool
      */
@@ -154,7 +154,7 @@ class RbacManager
 
     /**
      * Remove assignment from user
-     * @param Contracts\Permission|Contracts\Role $item
+     * @param Models\Permission|Models\Role $item
      * @param int                                 $user_id
      */
     public function revoke($item, int $user_id)

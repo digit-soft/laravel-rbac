@@ -2,13 +2,9 @@
 namespace DigitSoft\LaravelRbac;
 
 use DigitSoft\LaravelRbac\Commands\CreateItemMigrationsCommand;
-use DigitSoft\LaravelRbac\Commands\CreateItemFilesCommand;
 use DigitSoft\LaravelRbac\Contracts\AccessChecker;
-use DigitSoft\LaravelRbac\Contracts\Permission as PermissionContract;
-use DigitSoft\LaravelRbac\Contracts\Role as RoleContract;
 use DigitSoft\LaravelRbac\Contracts\Storage;
 use DigitSoft\LaravelRbac\Storages\DbStorage;
-use DigitSoft\LaravelRbac\Storages\PhpFileStorage;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -92,11 +88,8 @@ class RbacServiceProvider extends ServiceProvider
     {
         $this->app->singleton('rbac.storage', function ($app) {
             /** @var Application $app */
-            $storageClass = trim(config('rbac.storage', PhpFileStorage::class), '\\');
+            $storageClass = trim(config('rbac.storage', DbStorage::class), '\\');
             switch ($storageClass) {
-                case PhpFileStorage::class:
-                    return $this->createPhpFilesStorage($app);
-                    break;
                 case DbStorage::class:
                     return $this->createDbStorage($app);
                     break;
@@ -116,13 +109,9 @@ class RbacServiceProvider extends ServiceProvider
         $this->app->singleton('command.rbac.tables', function ($app) {
             return new CreateItemMigrationsCommand($app['files']);
         });
-        $this->app->singleton('command.rbac.storage.files', function ($app) {
-            return new CreateItemFilesCommand($app['files']);
-        });
 
         $this->commands([
             'command.rbac.tables',
-            'command.rbac.storage.files',
         ]);
     }
 
@@ -131,21 +120,8 @@ class RbacServiceProvider extends ServiceProvider
      */
     protected function registerClassesAliases()
     {
-        $this->app->alias(Permission::class, PermissionContract::class);
-        $this->app->alias(Role::class, RoleContract::class);
-    }
-
-    /**
-     * @param Application $app
-     * @return PhpFileStorage
-     */
-    private function createPhpFilesStorage($app)
-    {
-        /** @var \Illuminate\Config\Repository $config */
-        $config = $app['config'];
-        $itemsFile = $app->resourcePath($config->get('rbac.item_file'));
-        $assignsFile = $app->resourcePath($config->get('rbac.assigns_file'));
-        return new PhpFileStorage($app['files'], $itemsFile, $assignsFile);
+        //$this->app->alias(Permission::class, PermissionContract::class);
+        //$this->app->alias(Role::class, RoleContract::class);
     }
 
     /**
