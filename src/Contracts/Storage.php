@@ -10,15 +10,15 @@ interface Storage
 {
     /**
      * Get all items
-     * @param int|null $type
+     * @param  int|null $type
      * @return Item[]
      */
     public function getItems($type = null);
 
     /**
      * Get item by name
-     * @param string   $name
-     * @param int|null $type
+     * @param  string   $name
+     * @param  int|null $type
      * @return Item|null
      */
     public function getItem($name, $type = null);
@@ -71,32 +71,32 @@ interface Storage
     /**
      * Get user assignments.
      * From one user as indexed array or from all users as array keyed by user id.
-     * @param int|null $user_id
-     * @param bool     $onlyNames
-     * @param int|null $type
+     * @param  int      $user_id
+     * @param  bool     $onlyNames
+     * @param  int|null $type
      * @return array
      */
-    public function getAssignments($user_id = null, $onlyNames = false, $type = null);
+    public function getAssignments($user_id, $onlyNames = false, $type = null);
 
     /**
      * Add user assignment
-     * @param Item     $item
-     * @param int|null $user_id
+     * @param  Item     $item
+     * @param  int|null $user_id
      * @return bool
      */
     public function addAssignment($item, $user_id);
 
     /**
      * Remove assignment (from one user or all)
-     * @param Item     $item
-     * @param int|null $user_id
+     * @param  Item     $item
+     * @param  int|null $user_id
      * @return void
      */
     public function removeAssignment($item, $user_id = null);
 
     /**
      * Remove all user assignments
-     * @param int $user_id
+     * @param  int $user_id
      * @return void
      */
     public function removeAssignments($user_id);
