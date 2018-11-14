@@ -13,6 +13,8 @@ use Illuminate\Contracts\Support\Jsonable;
  * @property string $title
  * @property string $description
  * @property array  $children
+ * @mixin \Eloquent
+ * @mixin \DigitSoft\LaravelRbac\Models\Permission
  */
 interface Item extends Arrayable, Jsonable
 {
