@@ -2,20 +2,23 @@
 
 namespace DigitSoft\LaravelRbac\Middleware;
 
-use DigitSoft\LaravelRbac\Facades\Rbac;
 use Illuminate\Http\Request;
+use DigitSoft\LaravelRbac\Facades\Rbac;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Class PermissionCheck.
  * Middleware for permissions|roles check
+ *
  * @package DigitSoft\LaravelRbac\Middleware
  */
 class PermissionCheck
 {
     /**
-     * Handle request
-     * Check permissions or roles. Permissions can be passed as `|` separated array
+     * Handle request.
+     *
+     * Check permissions or roles. Permissions can be passed as `|` separated array.
+     *
      * @param  Request      $request
      * @param  \Closure     $next
      * @param  string|array $permission
@@ -29,9 +32,10 @@ class PermissionCheck
         $permissions = is_array($permission)
             ? $permission
             : explode('|', $permission);
-        if (!Rbac::has($permissions)) {
+        if (! Rbac::has($permissions)) {
             throw new AccessDeniedHttpException();
         }
+
         return $next($request);
     }
 }
